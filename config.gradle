@@ -1,0 +1,39 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+ext {
+    // false 集成模式
+
+    // true 组件模式
+
+    isComponent = false
+
+    androidConfig = [
+            compileSdkVersion: 27,
+            minSdkVersion    : 19,
+            targetSdkVersion : 27,
+            versionCode      : 1,
+            versionName      : "1.0"
+    ]
+
+    appIdConfig = [
+            app    : "com.prim.component.demo",
+            moudle1: "demo.prim.com.moudle1"
+    ]
+
+
+
+
+
+
+
+    version = [
+//            supportLibrary = "28.0.3",
+//            rxJavaVersion = "2.0.1",
+//            rxAndroidVersion = "2.0.7"
+    ]
+    depends = [
+            "appcompat-v7": "com.android.support:appcompat-v7:${version["supportLibrary"]}",
+            "rxjava"      : "io.reactivex.rxjava2:rxandroid:${version["rxJavaVersion"]}",
+            "rxAndroid"   : "io.reactivex.rxjava2:rxjava:${version["rxAndroidVersion"]}"
+    ]
+
+}
