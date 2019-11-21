@@ -175,4 +175,35 @@ public class QRCodeDecoder {
             return null;
         }
     }
+
+    /**
+     * 同步解析bitmap二维码。该方法是耗时操作，请在子线程中调用。
+     *
+     * @param bitmap 要解析的二维码图片
+     * @return 返回二维码图片里的内容 或 null
+     */
+    public static Result syncDecodeQRCodeResult(Bitmap bitmap) {
+        Result result;
+        RGBLuminanceSource source = null;
+        try {
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            int[] pixels = new int[width * height];
+            bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+            source = new RGBLuminanceSource(width, height, pixels);
+            result = new MultiFormatReader().decode(new BinaryBitmap(new HybridBinarizer(source)), ALL_HINT_MAP);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (source != null) {
+                try {
+                    result = new MultiFormatReader().decode(new BinaryBitmap(new GlobalHistogramBinarizer(source)), ALL_HINT_MAP);
+                    return result;
+                } catch (Throwable e2) {
+                    e2.printStackTrace();
+                }
+            }
+            return null;
+        }
+    }
 }
