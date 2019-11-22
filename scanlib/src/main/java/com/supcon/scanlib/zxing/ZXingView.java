@@ -78,6 +78,9 @@ public class ZXingView extends QRCodeView {
 
     @Override
     protected ScanResult processBitmapData(Bitmap bitmap) {
+        if (QRCodeDecoder.syncDecodeQRCodeResult(bitmap) == null) {
+            return new ScanResult(null);
+        }
         return new ScanResult(QRCodeDecoder.syncDecodeQRCodeResult(bitmap).getText(),QRCodeDecoder.syncDecodeQRCodeResult(bitmap).getBarcodeFormat());
     }
 

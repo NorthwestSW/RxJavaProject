@@ -40,6 +40,12 @@
             app:qrcv_toolbarHeight="0dp"
             app:qrcv_topOffset="100dp" />
 
-
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="相册"
+            android:onClick="clickCamera"
+            />
     </RelativeLayout>
+
 </LinearLayout>

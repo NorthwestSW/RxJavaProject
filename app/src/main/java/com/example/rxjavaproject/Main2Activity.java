@@ -1,14 +1,20 @@
 package com.example.rxjavaproject;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.supcon.scanlib.qrcode.QRCodeView;
 import com.supcon.scanlib.zxing.ZXingView;
+
+import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
 
 
 public class Main2Activity extends AppCompatActivity implements QRCodeView.Delegate {
@@ -35,7 +41,7 @@ public class Main2Activity extends AppCompatActivity implements QRCodeView.Deleg
     @Override
     public void onScanQRCodeSuccess(String result, BarcodeFormat format) {
         Log.i(TAG, "result:" + result);
-        Toast.makeText(this, "扫描结果为：" + result + "类型为: " + format.name(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "扫描结果为：" + result, Toast.LENGTH_SHORT).show();
         vibrate();
         mZXingView.startSpot(); // 开始识别
         //根据业务逻辑进行调整
@@ -89,5 +95,26 @@ public class Main2Activity extends AppCompatActivity implements QRCodeView.Deleg
     public void onDestroy() {
         mZXingView.onDestroy(); // 销毁二维码扫描控件
         super.onDestroy();
+    }
+
+    public void clickCamera(View view) {
+        Intent photoPickerIntent = new BGAPhotoPickerActivity.IntentBuilder(this)
+                .cameraFileDir(null)
+                .maxChooseCount(1)
+                .selectedPhotos(null)
+                .pauseOnScroll(false)
+                .build();
+        startActivityForResult(photoPickerIntent, GALLERY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+        if (resultCode == Activity.RESULT_OK && requestCode == GALLERY_REQUEST_CODE) {
+            final String picturePath = BGAPhotoPickerActivity.getSelectedPhotos(data).get(0);
+            // 本来就用到 QRCodeView 时可直接调 QRCodeView 的方法，走通用的回调
+            mZXingView.decodeQRCode(picturePath);
+        }
     }
 }
